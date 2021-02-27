@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 export default function App() {
   return (
-    <div className="App">
+    <div className="vw-100 vh-100">
       <DraggableWrapper innerElement={<div className="teste"></div>}/>
     </div>
   );
@@ -11,7 +11,7 @@ export default function App() {
 export class DraggableWrapper extends Component {
   constructor(props) {
     super(props)
-    this.state = {active: false, xOffset: 0, yOffset: 0}
+    this.state = {active: false, currentX: 0, currentY: 0};
     this.dragStart = this.dragStart.bind(this);
     this.dragEnd = this.dragEnd.bind(this);
     this.drag = this.drag.bind(this);
@@ -19,27 +19,25 @@ export class DraggableWrapper extends Component {
 
   dragStart(e) {
     if (!e.target.parentElement.classList.contains("draggable")) return;
-    this.setState({
-      active: true,
-      xOffset: getClientX(e) - currentX,
-      yOffset: getClientY(e) - currentY,
-    });
+    this.state.active = true;
+    this.state.initialX = getClientX(e) - this.state.currentX;
+    this.state.initialY = getClientY(e) - this.state.currentY;
   }
 
   drag(e) {
-    console.log(this.state.active)
     if (!this.state.active) return;
     e.preventDefault();
-    const currentX = getClientX(e) - initialX;
-    const currentY = getClientY(e) - initialY;
-    this.props.innerElement.style.transform = (
-      `translate3d(${currentX}px, ${currentY}px, 0)`
+    this.state.currentX = getClientX(e) - this.state.initialX;
+    this.state.currentY = getClientY(e) - this.state.initialY;
+    const element = e.target.classList.contains("draggable")?
+          e.target.firstChild : e.target;
+    element.style.transform = (
+      `translate3d(${this.state.currentX}px, ${this.state.currentY}px, 0)`
     );
   }
 
   dragEnd() {
-    console.log("end")
-    this.setState({active: false})
+    this.state.active = false;
   }
 
   render() {
@@ -49,6 +47,9 @@ export class DraggableWrapper extends Component {
         onMouseDown={this.dragStart}
         onMouseMove={this.drag}
         onMouseUp={this.dragEnd}
+        onTouchStart={this.dragStart}
+        onTouchMove={this.drag}
+        onTouchEnd={this.dragEnd}
       >
         {this.props.innerElement}
       </div>
@@ -56,66 +57,9 @@ export class DraggableWrapper extends Component {
   }
 }
 
-const getClientX = e => (e.type=="touchmove"? e.touches[0]: e).clientX
-const getClientY = e => (e.type=="touchmove"? e.touches[0]: e).clientY
-
-function a() {
-  window.xOffset = 0;
-  window.yOffset = 0;
-  let canvas = document.querySelector("#canvas");
-  canvas.addEventListener("mousedown", dragStart, false);
-  canvas.addEventListener("mousemove", drag, false);
-  canvas.addEventListener("mouseup", dragEnd, false);
-  function dragStart(e) {
-    if (e.target !== dragItem) return;
-    initialX = getClientX(e) - currentX;
-    initialY = getClientY(e) - currentY;
-    active = true
-  }
-
-  function dragEnd(e) {
-    active = false
-  }
-
-  function drag(e) {
-    if (!active) return;
-    e.preventDefault();
-    currentX = getClientX(e) - initialX;
-    currentY = getClientY(e) - initialY;
-    dragItem.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
-  }
-
-  function dragElementBlreh(element) {
-    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    element.addEventListener('mousedown', (e) => {
-      e.preventDefault();
-      // get the mouse cursor position at startup:
-      pos3 = e.clientX;
-      pos4 = e.clientY;
-      document.onmouseup = closeDragElement;
-      // call a function whenever the cursor moves:
-      element.addEventListener('mousemove', e => {
-        e = e || window.event;
-        e.preventDefault();
-        // calculate the new cursor position:
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        // set the element's new position:
-        element.style.top = (element.offsetTop - pos2) + "px";
-        element.style.left = (element.offsetLeft - pos1) + "px";
-      })
-
-      function closeDragElement() {
-        // stop moving when mouse button is released:
-        document.onmouseup = null;
-        document.onmousemove = null;
-      }
-    })
-  }
-}
-
+const isMobileEvent = e => e.type=="touchmove" || e.type=="touchstart"
+const getClientX = e => (isMobileEvent(e)? e.touches[0]: e).clientX
+const getClientY = e => (isMobileEvent(e)? e.touches[0]: e).clientY
 
 // since ctx is passed around a lot, this should be a class
 function drawDiagonal(ctx, start, end) {
