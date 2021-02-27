@@ -1,5 +1,9 @@
 import React from 'react';
-import DraggableWrapper from './DraggableWrapper';
+import DraggableWrapper from './components/DraggableWrapper';
+
+const isMobileEvent = e => e.type === "touchmove" || e.type === "touchstart";
+const getClientX = e => (isMobileEvent(e)? e.touches[0]: e).clientX;
+const getClientY = e => (isMobileEvent(e)? e.touches[0]: e).clientY;
 
 export default function App() {
   return (
@@ -7,27 +11,4 @@ export default function App() {
       <DraggableWrapper innerElement={<div className="teste"></div>}/>
     </div>
   );
-}
-
-// since ctx is passed around a lot, this should be a class
-function drawDiagonal(ctx, start, end) {
-  ctx.beginPath();
-  ctx.moveTo(start.x, start.y);
-  ctx.lineTo(end.x, end.y);
-  ctx.stroke()
-}
-
-function drawEdge(start, end) {
-  drawDiagonal({
-    start: getNearestNodePos(start),
-    end: getNearestNodePos(end),
-  })
-}
-
-function onclick(e) {
-  a = e.algo
-  wait
-  b = e.algo2
-
-  return a,b
 }

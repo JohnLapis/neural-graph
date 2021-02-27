@@ -1,9 +1,5 @@
 import React, {Component} from 'react';
 
-const isMobileEvent = e => e.type === "touchmove" || e.type === "touchstart"
-const getClientX = e => (isMobileEvent(e)? e.touches[0]: e).clientX
-const getClientY = e => (isMobileEvent(e)? e.touches[0]: e).clientY
-
 export default class DraggableWrapper extends Component {
   constructor(props) {
     super(props)
