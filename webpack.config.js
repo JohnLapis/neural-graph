@@ -12,8 +12,16 @@ module.exports = {
   //   'react': 'react',
   //   'react-dom': 'react-dom',
   // },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js'],
+  },
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        exclude: '/node_modules/',
+        use: 'ts-loader',
+      },
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
