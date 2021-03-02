@@ -3,7 +3,7 @@ process.env.BABEL_ENV = 'production'
 process.env.NODE_ENV = 'production'
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/index.tsx',
   output: {
     path: path.resolve('./js'),
     filename: 'main.js',
