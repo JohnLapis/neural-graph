@@ -18,7 +18,7 @@ const node2 = new DefaultNodeModel({ name: 'Node 1', color: 'rgb(0,192,255)' })
 node2.setPosition(500, 100)
 const port2 = node2.addOutPort('Out')
 
-const link = port1.link<DefaultLinkModel>(port2)
+const link = port1.link(port2)
 
 const model = new DiagramModel()
 model.addAll(node1, link, node2)
