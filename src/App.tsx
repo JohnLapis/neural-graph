@@ -56,6 +56,8 @@ class GraphCanvas extends CanvasWidget {
 
 const StyledGraphCanvas = styled(GraphCanvas)`
   overflow: visible;
+  height: 100vh;
+  width: 100vw;
 `
 
 export default function App () {
