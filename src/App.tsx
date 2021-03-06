@@ -45,11 +45,10 @@ class GraphCanvas extends CanvasWidget {
     this.registerCanvas()
 
     Array.from(this.ref.current.lastChild.children).forEach(node => {
-      const root = node.firstChild
-      const bottomDiv = root.lastChild
+      const nodeNameDiv = node.firstChild.firstChild
       const editor = document.createElement('textarea')
       editor.appendChild(document.createTextNode('sdlfasd;fasdfasdf'))
-      root.insertBefore(editor, bottomDiv)
+      nodeNameDiv.insertAdjacentElement('afterend', editor)
     })
   }
 }
