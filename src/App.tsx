@@ -36,29 +36,17 @@ class GraphCanvas extends CanvasWidget {
             zoomedIn: false,
         }
     }
-  componentDidMount () {
-    this.canvasListener = this.props.engine.registerListener({
-      repaintCanvas: () => {
-        this.forceUpdate()
-      }
-    })
-    this.keyDown = (event) => {
-      this.props.engine.getActionEventBus().fireAction({ event })
-    }
-    this.keyUp = (event) => {
-      this.props.engine.getActionEventBus().fireAction({ event })
-    }
-    document.addEventListener('keyup', this.keyUp)
-    document.addEventListener('keydown', this.keyDown)
-    this.registerCanvas()
 
+  componentDidUpdate () {
+    this.registerCanvas()
     Array.from(this.ref.current.lastChild.children).forEach(node => {
-      const nodeNameDiv = node.firstChild.firstChild
-      const editor = document.createElement('textarea')
-      editor.appendChild(document.createTextNode('sdlfasd;fasdfasdf'))
-      nodeNameDiv.insertAdjacentElement('afterend', editor)
+        const nodeNameDiv = node.firstChild.firstChild
+        const editor = document.createElement('textarea')
+        editor.appendChild(document.createTextNode('sdlfasd;fasdfasdf'))
+        nodeNameDiv.insertAdjacentElement('afterend', editor)
     })
   }
+
   render() {
 	  const engine = this.props.engine;
 	  const model = engine.getModel();
