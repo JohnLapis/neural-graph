@@ -2,8 +2,18 @@ import React from 'react'
 import { CanvasWidget, TransformLayerWidget, SmartLayerWidget } from '@projectstorm/react-canvas-core'
 import styled from '@emotion/styled'
 
-class GraphCanvas extends CanvasWidget {
-  constructor (props) {
+namespace S {
+	export const Canvas = styled.div`
+	  position: relative;
+	  cursor: move;
+    overflow: visible;
+    height: 100vh; width: 100vw;
+`
+}
+
+
+export default class GraphCanvas extends CanvasWidget {
+    constructor (props) {
     super(props)
     this.state = { zoomedIn: false }
   }
@@ -22,7 +32,7 @@ class GraphCanvas extends CanvasWidget {
     const engine = this.props.engine
     const model = engine.getModel()
     return (
-          <div
+          <S.Canvas
               className={this.props.className}
               ref={this.ref}
               onWheel={(event) => {
@@ -54,11 +64,7 @@ class GraphCanvas extends CanvasWidget {
                           </TransformLayerWidget>
                 )
               })}
-          </div>
+          </S.Canvas>
     )
   }
 }
-export default styled(GraphCanvas)`
-  overflow: visible;
-  height: 100vh; width: 100vw;
-`
