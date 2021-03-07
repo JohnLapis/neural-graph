@@ -61,8 +61,27 @@ const StyledGraphCanvas = styled(GraphCanvas)`
 
 export default function App () {
   return (
-        <div className="vw-100 vh-100 grid">
-            <StyledGraphCanvas engine={engine} />
-        </div>
+      <div className="vw-100 vh-100 grid container">
+          <div className="row">
+              <button onClick={() => {
+                const node3 = new DefaultNodeModel({ name: 'OIOIO' })
+                model.addNode(node3)
+                engine.repaintCanvas()
+              }}>
+                  Add node
+              </button>
+              <button onClick={() => {
+                if (model.getSelectedEntities().length === 1) {
+                  model.removeNode(model.getSelectedEntities()[0])
+                  engine.repaintCanvas()
+                }
+              }}>
+                  Remove node
+              </button>
+          </div>
+          <div className="row">
+              <StyledGraphCanvas engine={engine} />
+          </div>
+      </div>
   )
 }
