@@ -131,6 +131,14 @@ export default function App () {
               }}>
                   Remove node
               </button>
+              <button onClick={() => {
+                if (model.getSelectedEntities().length === 1) {
+                  model.removeLink(model.getSelectedEntities()[0])
+                  engine.repaintCanvas()
+                }
+              }}>
+                  Remove edge
+              </button>
           </div>
           <div className="row">
               <StyledGraphCanvas engine={engine} />
