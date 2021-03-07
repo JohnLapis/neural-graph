@@ -3,7 +3,9 @@ import createEngine, {
   DefaultNodeModel,
   DiagramModel
 } from '@projectstorm/react-diagrams'
-import { CanvasWidget } from '@projectstorm/react-canvas-core'
+import {
+    CanvasWidget, TransformLayerWidget, SmartLayerWidget
+} from '@projectstorm/react-canvas-core'
 import styled from '@emotion/styled'
 
 const node1 = new DefaultNodeModel({ name: 'Node 1', color: 'rgb(0,192,255)' })
@@ -28,6 +30,12 @@ const engine = createEngine()
 engine.setModel(model)
 
 class GraphCanvas extends CanvasWidget {
+    constructor(props) {
+        super(props)
+        this.state = {
+            zoomedIn: false,
+        }
+    }
   componentDidMount () {
     this.canvasListener = this.props.engine.registerListener({
       repaintCanvas: () => {
@@ -51,6 +59,51 @@ class GraphCanvas extends CanvasWidget {
       nodeNameDiv.insertAdjacentElement('afterend', editor)
     })
   }
+  render() {
+	  const engine = this.props.engine;
+	  const model = engine.getModel();
+
+	    return (
+		      <div
+			        className={this.props.className}
+			        ref={this.ref}
+			        onWheel={(event) => {
+				          this.props.engine.getActionEventBus().fireAction({ event });
+			        }}
+			        onMouseDown={(event) => {
+				          this.props.engine.getActionEventBus().fireAction({ event });
+			        }}
+			        onMouseUp={(event) => {
+				          this.props.engine.getActionEventBus().fireAction({ event });
+			        }}
+			        onMouseMove={(event) => {
+				          this.props.engine.getActionEventBus().fireAction({ event });
+			        }}
+              onDoubleClick={(event) => {
+                  if (this.state.zoomedIn && event.target === this.ref.current) {
+                      model.setZoomLevel(100)
+                      this.setState({
+                          zoomedIn: false
+                      })
+                  }
+                  if (!this.state.zoomedIn && model.getSelectedEntities()) {
+                      const selectedNode = model.getSelectedEntities()[0]
+                      model.setZoomLevel(200)
+                      this.setState({
+                          zoomedIn: true
+                      })
+                  }
+              }}>
+			        {model.getLayers().map((layer) => {
+				          return (
+					            <TransformLayerWidget layer={layer} key={layer.getID()}>
+						              <SmartLayerWidget layer={layer} engine={this.props.engine} key={layer.getID()} />
+					            </TransformLayerWidget>
+				          );
+			        })}
+		      </div>
+	    );
+}
 }
 
 const StyledGraphCanvas = styled(GraphCanvas)`
