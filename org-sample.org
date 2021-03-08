@@ -1,0 +1,38 @@
+** .*                                   :tag:
+- list item
+  + list item
+    * list item
+      1. list item
+         1) list item
+
+/italic/, *bold*, _underline_ +strikethrough+
+[[link][yep]]
+
+:oioioi:
+
+TODO
+*** !
+*** S
+*** >>
+*** =>
+*** TODO
+*** §
+*** §>
+*** =
+*** ∞
+*** DONE
+DONE
+
+IDEA, UPDATE, IMP
+
+
+$orangeKeywod
+%darkPinkKeywod
+
+# that's a comment
+
+| that's a table | a column |
+|----------------+----------|
+| abc            | def      |
+|                |          |
+  acabou a table
