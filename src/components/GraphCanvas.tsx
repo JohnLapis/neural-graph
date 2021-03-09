@@ -11,8 +11,7 @@ namespace S {
 `
 }
 
-
-export default class GraphCanvas extends CanvasWidget {
+export class GraphCanvas extends CanvasWidget {
     constructor (props) {
     super(props)
     this.state = { zoomedIn: false }

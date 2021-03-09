@@ -3,7 +3,7 @@ import createEngine, {
   DefaultNodeModel,
   DiagramModel
 } from '@projectstorm/react-diagrams'
-import GraphCanvas from './components/GraphCanvas'
+import { GraphCanvas } from './components/GraphCanvas'
 
 const node1 = new DefaultNodeModel({ name: 'Node 1', color: 'rgb(0,192,255)' })
 node1.setPosition(100, 100)
