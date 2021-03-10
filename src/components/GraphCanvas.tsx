@@ -2,6 +2,15 @@ import React from 'react'
 import { CanvasWidget, TransformLayerWidget, SmartLayerWidget } from '@projectstorm/react-canvas-core'
 import styled from '@emotion/styled'
 
+export function addEditor(node) {
+    const nodeNameDiv = node.firstChild.firstChild
+    if (nodeNameDiv.nextElementSibling.tagName !== 'TEXTAREA') {
+        const editor = document.createElement('textarea')
+        editor.appendChild(document.createTextNode('sdlfasd;fasdfasdf'))
+        nodeNameDiv.insertAdjacentElement('afterend', editor)
+    }
+}
+
 namespace S {
 	export const Canvas = styled.div`
 	  position: relative;
@@ -17,14 +26,26 @@ export class GraphCanvas extends CanvasWidget {
     this.state = { zoomedIn: false }
   }
 
-  componentDidUpdate () {
-    this.registerCanvas()
-    Array.from(this.ref.current.lastChild.children).forEach(node => {
-      const nodeNameDiv = node.firstChild.firstChild
-      const editor = document.createElement('textarea')
-      editor.appendChild(document.createTextNode('sdlfasd;fasdfasdf'))
-      nodeNameDiv.insertAdjacentElement('afterend', editor)
-    })
+	  componentDidMount() {
+		    this.canvasListener = this.props.engine.registerListener({
+			      repaintCanvas: () => {
+				        this.forceUpdate();
+			      }
+		    });
+
+		    this.keyDown = (event) => {
+			      this.props.engine.getActionEventBus().fireAction({ event });
+		    };
+		    this.keyUp = (event) => {
+			      this.props.engine.getActionEventBus().fireAction({ event });
+		    };
+
+		    document.addEventListener('keyup', this.keyUp);
+		    document.addEventListener('keydown', this.keyDown);
+
+        Array.from(this.ref.current.lastChild.children).forEach(addEditor)
+
+		    this.registerCanvas();
   }
 
   render () {

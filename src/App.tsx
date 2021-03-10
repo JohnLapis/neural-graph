@@ -3,7 +3,7 @@ import createEngine, {
   DefaultNodeModel,
   DiagramModel
 } from '@projectstorm/react-diagrams'
-import { GraphCanvas } from './components/GraphCanvas'
+import { GraphCanvas, addEditor } from './components/GraphCanvas'
 
 const node1 = new DefaultNodeModel({ name: 'Node 1', color: 'rgb(0,192,255)' })
 node1.setPosition(100, 100)
@@ -30,10 +30,14 @@ export default function App () {
   return (
       <div className="vw-100 vh-100 grid container">
           <div className="row">
-              <button onClick={() => {
-                const node3 = new DefaultNodeModel({ name: 'OIOIO' })
-                model.addNode(node3)
-                engine.repaintCanvas()
+              <button onClick={async () => {
+                  const newNode = new DefaultNodeModel({ name: 'OIOIO' })
+                  model.addNode(newNode)
+                  await engine.repaintCanvas(true)
+                  const nodeElement = Array.from(
+                      document.querySelectorAll('.node')
+                  ).find(node => node.dataset.nodeid === newNode.getOptions().id)
+                  addEditor(nodeElement)
               }}>
                   Add node
               </button>
