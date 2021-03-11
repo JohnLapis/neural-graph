@@ -1,14 +1,20 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { CanvasWidget, TransformLayerWidget, SmartLayerWidget } from '@projectstorm/react-canvas-core'
 import styled from '@emotion/styled'
+import { Editor } from './Editor'
 
-export function addEditor(node) {
-    const nodeNameDiv = node.firstChild.firstChild
-    if (nodeNameDiv.nextElementSibling.tagName !== 'TEXTAREA') {
-        const editor = document.createElement('textarea')
-        editor.appendChild(document.createTextNode('sdlfasd;fasdfasdf'))
-        nodeNameDiv.insertAdjacentElement('afterend', editor)
-    }
+export function processNode(node) {
+    const nodeTopDiv = node.firstChild.firstChild
+    nodeTopDiv.style.height = "200px"
+    nodeTopDiv.style.width = "150px"
+
+    ReactDOM.render(
+        <Editor >
+            DONE TODO
+        </Editor>,
+        nodeTopDiv,
+    )
 }
 
 namespace S {
@@ -43,7 +49,7 @@ export class GraphCanvas extends CanvasWidget {
 		    document.addEventListener('keyup', this.keyUp);
 		    document.addEventListener('keydown', this.keyDown);
 
-        Array.from(this.ref.current.lastChild.children).forEach(addEditor)
+        Array.from(this.ref.current.lastChild.children).forEach(processNode)
 
 		    this.registerCanvas();
   }

@@ -3,7 +3,7 @@ import createEngine, {
   DefaultNodeModel,
   DiagramModel
 } from '@projectstorm/react-diagrams'
-import { GraphCanvas, addEditor } from './components/GraphCanvas'
+import { GraphCanvas, processNode } from './components/GraphCanvas'
 
 const node1 = new DefaultNodeModel({ name: 'Node 1', color: 'rgb(0,192,255)' })
 node1.setPosition(100, 100)
@@ -37,7 +37,7 @@ export default function App () {
                   const nodeElement = Array.from(
                       document.querySelectorAll('.node')
                   ).find(node => node.dataset.nodeid === newNode.getOptions().id)
-                  addEditor(nodeElement)
+                  processNode(nodeElement)
               }}>
                   Add node
               </button>
