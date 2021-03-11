@@ -31,13 +31,13 @@ export default function App () {
       <div className="vw-100 vh-100 grid container">
           <div className="row">
               <button onClick={async () => {
-                  const newNode = new DefaultNodeModel({ name: 'OIOIO' })
-                  model.addNode(newNode)
-                  await engine.repaintCanvas(true)
-                  const nodeElement = Array.from(
-                      document.querySelectorAll('.node')
-                  ).find(node => node.dataset.nodeid === newNode.getOptions().id)
-                  processNode(nodeElement)
+                const newNode = new DefaultNodeModel({ name: 'OIOIO' })
+                model.addNode(newNode)
+                await engine.repaintCanvas(true)
+                const nodeElement = Array.from(
+                  document.querySelectorAll('.node')
+                ).find(node => node.dataset.nodeid === newNode.getOptions().id)
+                processNode(nodeElement)
               }}>
                   Add node
               </button>
