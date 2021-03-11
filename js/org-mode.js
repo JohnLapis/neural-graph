@@ -1,3 +1,4 @@
+Rainbow.defer = true
 Rainbow.extend('orgmode', [
   {
     matches: {
