@@ -1,9 +1,11 @@
 import React from 'react'
 import createEngine, {
   DefaultNodeModel,
-  DiagramModel
+  DiagramModel,
+  LinkModel,
+  NodeModel,
 } from '@projectstorm/react-diagrams'
-import GraphCanvas from './components/GraphCanvas'
+import { GraphCanvas, processNode } from './components/GraphCanvas'
 
 const node1 = new DefaultNodeModel({ name: 'Node 1', color: 'rgb(0,192,255)' })
 node1.setPosition(100, 100)
@@ -30,16 +32,21 @@ export default function App () {
   return (
       <div className="vw-100 vh-100 grid container">
           <div className="row">
-              <button onClick={() => {
-                const node3 = new DefaultNodeModel({ name: 'OIOIO' })
-                model.addNode(node3)
-                engine.repaintCanvas()
+              <button onClick={async () => {
+                const newNode = new DefaultNodeModel({ name: 'OIOIO' })
+                model.addNode(newNode)
+                await engine.repaintCanvas(true)
+                const nodeElement = Array.from(
+                  document.querySelectorAll('.node')
+                ).find(node => (node as HTMLElement).dataset.nodeid === newNode.getOptions().id)
+                if (nodeElement) processNode(nodeElement)
               }}>
                   Add node
               </button>
               <button onClick={() => {
                 if (model.getSelectedEntities().length === 1) {
-                  model.removeNode(model.getSelectedEntities()[0])
+                  const entity = model.getSelectedEntities()[0]
+                  if (entity instanceof NodeModel) model.removeNode(entity)
                   engine.repaintCanvas()
                 }
               }}>
@@ -47,7 +54,8 @@ export default function App () {
               </button>
               <button onClick={() => {
                 if (model.getSelectedEntities().length === 1) {
-                  model.removeLink(model.getSelectedEntities()[0])
+                  const entity = model.getSelectedEntities()[0]
+                  if (entity instanceof LinkModel) model.removeLink(entity)
                   engine.repaintCanvas()
                 }
               }}>
