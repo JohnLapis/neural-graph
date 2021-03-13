@@ -24,7 +24,7 @@ Rainbow.extend('orgmode', [
   },
   {
     name: 'list',
-    pattern: /^\s*?([-+]|\s+\*|\d+[).])/gm,
+    pattern: /^\s*?([-+]|\s+\*|\d+[).])\s/gm,
   },
   {
     name: 'italic',
