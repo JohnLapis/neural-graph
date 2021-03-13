@@ -13,27 +13,44 @@ export class Editor extends Component {
       element.addEventListener('mousedown', e => e.stopPropagation())
       element.addEventListener('mouseup', e => e.stopPropagation())
       element.addEventListener('mousemove', e => e.stopPropagation())
-      Rainbow.color(element, () => {
-        const preloader = element?.children?.[1]
-        // it prevents preloader from getting in the way of mouse selection
-        if (preloader) preloader.hidden = true
+      this.highlightText(element?.children[1])
+    }
+
+    highlightText (inputElement) {
+      const language = inputElement.dataset.language
+      const visibleElement = inputElement.previousElementSibling
+      const inputText = inputElement.innerText.replaceAll(/\n\n/g, '\n')
+      Rainbow.color(inputText, language, coloredText => {
+        visibleElement.innerHTML = coloredText
       })
     }
 
     render () {
-      const language = 'language-' + (this.props?.language || 'orgmode')
+      const language = this.props?.language || 'orgmode'
       return (
-            <pre
-                className="w-100 h-100"
-                ref={this.ref}
-                contentEditable="true"
-                spellCheck="false"
-                style={{ cursor: 'text' }}
-            >
-                <code className={language}>
-                    {this.props.children}
-                </code>
-            </pre>
+          <pre className="w-100 h-100" ref={this.ref}>
+              <div className="w-100 h-100"
+                  style={{
+                    position: 'absolute',
+                    userSelect: 'none'
+                  }}>
+              </div>
+              <div
+                  className="w-100 h-100"
+                  data-language={language}
+                  contentEditable="true"
+                  spellCheck="false"
+                  style={{
+                    cursor: 'text',
+                    position: 'relative',
+                    WebkitTextFillColor: 'transparent',
+                    color: 'hsl(100, 95%, 95%)',
+                    display: 'inline-block'
+                  }}
+                  onInput={(e) => this.highlightText(e.target)}>
+                  {this.props.children}
+              </div>
+          </pre>
       )
     }
 }
