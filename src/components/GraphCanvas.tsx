@@ -10,9 +10,7 @@ export function processNode (node) {
   nodeTopDiv.style.width = '150px'
 
   ReactDOM.render(
-        <Editor >
-            DONE TODO
-        </Editor>,
+        <Editor />
         nodeTopDiv
   )
 }
