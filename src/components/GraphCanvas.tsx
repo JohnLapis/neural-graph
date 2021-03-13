@@ -1,5 +1,3 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
 import { CanvasWidget, TransformLayerWidget, SmartLayerWidget } from '@projectstorm/react-canvas-core'
 import styled from '@emotion/styled'
 import { Editor } from './Editor'

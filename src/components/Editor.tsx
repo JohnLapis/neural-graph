@@ -1,5 +1,3 @@
-import React, { Component } from 'react'
-
 declare const Rainbow: {
     color: (input: string, language: string, cb: (output: string) => any) => any,
 }
@@ -9,7 +7,7 @@ interface EditorProps {
     language?: string
 }
 
-export class Editor extends Component<EditorProps> {
+export class Editor extends React.Component<EditorProps> {
     ref: React.RefObject<HTMLDivElement>
 
     constructor (props) {

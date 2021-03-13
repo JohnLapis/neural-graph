@@ -3,7 +3,8 @@
   "compilerOptions": {
     "jsx": "react",
     "noImplicitAny": false,
-    "lib": ["dom"]
+    "lib": ["dom"],
+    "allowUmdGlobalAccess": true
   },
   "include": ["src/**/*", "tests/**/*"]
 }

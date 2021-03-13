@@ -8,10 +8,10 @@ module.exports = {
     path: path.resolve('./js'),
     filename: 'main.js',
   },
-  // externals: {
-  //   'react': 'react',
-  //   'react-dom': 'react-dom',
-  // },
+  externals: {
+    'react': 'React',
+    'react-dom': 'ReactDOM',
+  },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
   },
