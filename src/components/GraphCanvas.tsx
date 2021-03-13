@@ -4,13 +4,13 @@ import { CanvasWidget, TransformLayerWidget, SmartLayerWidget } from '@projectst
 import styled from '@emotion/styled'
 import { Editor } from './Editor'
 
-export function processNode (node) {
-  const nodeTopDiv = node.firstChild.firstChild
+export function processNode (node: Element) {
+  const nodeTopDiv = node.firstElementChild?.firstElementChild as HTMLElement
   nodeTopDiv.style.height = '200px'
   nodeTopDiv.style.width = '150px'
 
   ReactDOM.render(
-        <Editor />
+        <Editor />,
         nodeTopDiv
   )
 }
@@ -25,6 +25,8 @@ namespace S {
 }
 
 export class GraphCanvas extends CanvasWidget {
+  state: { zoomedIn: boolean }
+
   constructor (props) {
     super(props)
     this.state = { zoomedIn: false }
@@ -47,7 +49,7 @@ export class GraphCanvas extends CanvasWidget {
     document.addEventListener('keyup', this.keyUp)
     document.addEventListener('keydown', this.keyDown)
 
-    Array.from(this.ref.current.lastChild.children).forEach(processNode)
+    Array.from(this.ref.current?.lastElementChild?.children || []).forEach(processNode)
 
     this.registerCanvas()
   }
