@@ -8,7 +8,7 @@ interface EditorProps {
 }
 
 export class Editor extends React.Component<EditorProps> {
-    ref: React.RefObject<HTMLDivElement>
+    ref: React.RefObject<HTMLPreElement>
 
     constructor (props) {
       super(props)
@@ -36,7 +36,7 @@ export class Editor extends React.Component<EditorProps> {
     render () {
       const language = this.props.language || 'orgmode'
       return (
-          <pre className="w-100 h-100">
+          <pre className="w-100 h-100" ref={this.ref}>
               <div className="w-100 h-100"
                   style={{
                     position: 'absolute',
