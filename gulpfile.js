@@ -1,6 +1,3 @@
-/* eslint-env node */
-/* eslint no-var: false */
-
 var gulp = require('gulp');
 var del = require('del');
 var KarmaServer = require('karma').Server;
