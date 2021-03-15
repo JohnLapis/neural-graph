@@ -1,14 +1,40 @@
 import {
   DefaultNodeModel,
   LinkModel,
-  NodeModel
+  NodeModel,
+  DiagramModel,
+  DiagramEngine,
+  DagreEngine
 } from '@projectstorm/react-diagrams'
 import { Editor } from './components/Editor'
 
-export function processNode (node: Element, content: string = '') {
+const dagreEngine = new DagreEngine({
+	  graph: {
+	      rankdir: 'RL',
+	      ranker: 'longest-path',
+	      marginx: 25,
+	      marginy: 25
+	  },
+	  includeLinks: true
+})
+
+const languages = {
+  org: 'orgmode'
+}
+
+const patterns = {
+  orgmode: /pattern/
+}
+
+interface NodeOptions {
+    height?: number,
+    width?: number,
+}
+
+export function processNode (node: Element, content: string = '', options: NodeOptions = { height: 200, width: 150 }) {
   const nodeTopDiv = node.firstElementChild?.firstElementChild as HTMLElement
-  nodeTopDiv.style.height = '200px'
-  nodeTopDiv.style.width = '150px'
+  nodeTopDiv.style.height = options.height + 'px'
+  nodeTopDiv.style.width = options.width + 'px'
 
   ReactDOM.render(
         <Editor>
@@ -18,19 +44,27 @@ export function processNode (node: Element, content: string = '') {
   )
 }
 
-const languages = {
-  org: 'orgmode'
+function getLanguage (extension, defaultValue) {
+  return languages[extension] || defaultValue
 }
 
-function getLanguage (ext, defaultValue) {
-  return languages[ext] || defaultValue
+function getPattern (language) {
+  return patterns[language]
 }
 
-export async function createGraph (file, engine, model) {
+function parseText (text, language): string[] {
+  if (true) {
+    return [text]
+  } else {
+    /* return text.matchAll(getPattern(language)) */
+  }
+}
+
+export async function createGraph (file, engine: DiagramEngine, model: DiagramModel) {
   const extension = file.name.match(/\.(.+)$/)?.[1]
   const language = getLanguage(extension, 'orgmode')
   const text = await file.text()
-  const matches = [text] // $DPS text.matchAll(/pattern/)
+  const matches = parseText(text, language)
 
   const nodes: NodeModel[] = []
   const nodesData = matches.map(content => {
@@ -51,4 +85,7 @@ export async function createGraph (file, engine, model) {
     const nodeElement = document.querySelector(`.node[data-nodeid="${data.id}"]`)
     if (nodeElement) processNode(nodeElement, data.content)
   })
+
+  dagreEngine.redistribute(model)
+  engine.zoomToFitNodes(50)
 }
