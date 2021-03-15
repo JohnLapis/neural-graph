@@ -4,7 +4,8 @@ import createEngine, {
   LinkModel,
   NodeModel,
 } from '@projectstorm/react-diagrams'
-import { GraphCanvas, processNode } from './components/GraphCanvas'
+import { GraphCanvas } from './components/GraphCanvas'
+import { processNode } from './utils'
 
 function getTestModel() {
   const node1 = new DefaultNodeModel({ name: 'Node 1', color: 'rgb(0,192,255)' })

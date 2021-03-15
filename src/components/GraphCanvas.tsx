@@ -1,17 +1,6 @@
 import { CanvasWidget, TransformLayerWidget, SmartLayerWidget } from '@projectstorm/react-canvas-core'
 import styled from '@emotion/styled'
-import { Editor } from './Editor'
-
-export function processNode (node: Element) {
-  const nodeTopDiv = node.firstElementChild?.firstElementChild as HTMLElement
-  nodeTopDiv.style.height = '200px'
-  nodeTopDiv.style.width = '150px'
-
-  ReactDOM.render(
-        <Editor />,
-        nodeTopDiv
-  )
-}
+import { processNode } from '../utils'
 
 namespace S {
  export const Canvas = styled.div`
@@ -47,7 +36,8 @@ export class GraphCanvas extends CanvasWidget {
     document.addEventListener('keyup', this.keyUp)
     document.addEventListener('keydown', this.keyDown)
 
-    Array.from(this.ref.current?.lastElementChild?.children || []).forEach(processNode)
+    Array.from(this.ref.current?.lastElementChild?.children || [])
+          .forEach((node) => processNode(node))
 
     this.registerCanvas()
   }
