@@ -5,7 +5,7 @@ import createEngine, {
   NodeModel,
 } from '@projectstorm/react-diagrams'
 import { GraphCanvas } from './components/GraphCanvas'
-import { processNode } from './utils'
+import { createGraph, processNode } from './utils'
 
 function getTestModel() {
   const node1 = new DefaultNodeModel({ name: 'Node 1', color: 'rgb(0,192,255)' })
@@ -66,6 +66,12 @@ export default function App () {
               }}>
                   Remove edge
               </button>
+              <input type="file" onChange={async (e) => {
+                  const files = e.target.files || []
+                  if (files.length > 0) {
+                    createGraph(files[0], engine, model)
+                  }
+              }} />
           </div>
           <div className="row">
               <GraphCanvas engine={engine} />
