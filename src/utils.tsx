@@ -9,13 +9,13 @@ import {
 import { Editor } from './components/Editor'
 
 const dagreEngine = new DagreEngine({
-	  graph: {
-	      rankdir: 'RL',
-	      ranker: 'longest-path',
-	      marginx: 25,
-	      marginy: 25
-	  },
-	  includeLinks: true
+  graph: {
+    rankdir: 'RL',
+    ranker: 'longest-path',
+    marginx: 25,
+    marginy: 25
+  },
+  includeLinks: true
 })
 
 const languages = {
@@ -23,7 +23,7 @@ const languages = {
 }
 
 const patterns = {
-  orgmode: /pattern/
+  orgmode: /^\*{2} .*$/
 }
 
 interface NodeOptions {
@@ -49,15 +49,14 @@ function getLanguage (extension, defaultValue) {
 }
 
 function getPattern (language) {
-  return patterns[language]
+  return patterns[language].source
 }
 
 function parseText (text, language): string[] {
-  if (true) {
-    return [text]
-  } else {
-    /* return text.matchAll(getPattern(language)) */
-  }
+  // lookahead is used to keep the delimiter in the match after splitting
+  const pattern = new RegExp(`(?=${getPattern(language)})`, 'gm')
+  const matches = text.split(pattern)
+  return matches.filter(Boolean)
 }
 
 export async function createGraph (file, engine: DiagramEngine, model: DiagramModel) {
