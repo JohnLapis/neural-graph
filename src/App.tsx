@@ -6,25 +6,29 @@ import createEngine, {
 } from '@projectstorm/react-diagrams'
 import { GraphCanvas, processNode } from './components/GraphCanvas'
 
-const node1 = new DefaultNodeModel({ name: 'Node 1', color: 'rgb(0,192,255)' })
-node1.setPosition(100, 100)
-node1.addInPort('In')
-node1.addOutPort('Out')
+function getTestModel() {
+  const node1 = new DefaultNodeModel({ name: 'Node 1', color: 'rgb(0,192,255)' })
+  node1.setPosition(100, 100)
+  node1.addInPort('In')
+  node1.addOutPort('Out')
 
-const node2 = new DefaultNodeModel({ name: 'Node 2', color: 'rgb(0,192,255)' })
-node2.setPosition(500, 100)
-node2.addInPort('In')
-node2.addOutPort('Out')
+  const node2 = new DefaultNodeModel({ name: 'Node 2', color: 'rgb(0,192,255)' })
+  node2.setPosition(500, 100)
+  node2.addInPort('In')
+  node2.addOutPort('Out')
 
-const node3 = new DefaultNodeModel({ name: 'Node 3', color: 'rgb(0,192,255)' })
-node3.setPosition(500, 200)
-node3.addInPort('In')
-node3.addOutPort('Out')
+  const node3 = new DefaultNodeModel({ name: 'Node 3', color: 'rgb(0,192,255)' })
+  node3.setPosition(500, 200)
+  node3.addInPort('In')
+  node3.addOutPort('Out')
 
-const model = new DiagramModel()
-model.addAll(node1, node2, node3)
+  const model = new DiagramModel()
+  model.addAll(node1, node2, node3)
+  return model
+}
 
 const engine = createEngine()
+const model = getTestModel()
 engine.setModel(model)
 
 export default function App () {
