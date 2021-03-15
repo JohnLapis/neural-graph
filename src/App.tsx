@@ -38,6 +38,8 @@ export default function App () {
           <div className="row">
               <button onClick={async () => {
                 const newNode = new DefaultNodeModel({ name: 'OIOIO' })
+                newNode.addInPort('In')
+                newNode.addOutPort('Out')
                 model.addNode(newNode)
                 await engine.repaintCanvas(true)
                 const id = newNode.getOptions().id
