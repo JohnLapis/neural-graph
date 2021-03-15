@@ -40,9 +40,8 @@ export default function App () {
                 const newNode = new DefaultNodeModel({ name: 'OIOIO' })
                 model.addNode(newNode)
                 await engine.repaintCanvas(true)
-                const nodeElement = Array.from(
-                  document.querySelectorAll('.node')
-                ).find(node => (node as HTMLElement).dataset.nodeid === newNode.getOptions().id)
+                const id = newNode.getOptions().id
+                const nodeElement = document.querySelector(`.node[data-nodeid="${id}"]`)
                 if (nodeElement) processNode(nodeElement)
               }}>
                   Add node
