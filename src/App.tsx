@@ -3,6 +3,7 @@ import createEngine, {
   DiagramModel,
   LinkModel,
   NodeModel,
+  DagreEngine
 } from '@projectstorm/react-diagrams'
 import { GraphCanvas } from './components/GraphCanvas'
 import { createGraph, processNode } from './utils'
@@ -28,9 +29,48 @@ function getTestModel() {
   return model
 }
 
+const mockFile = {
+    name: 'name',
+    text: async () => `
+** a
+
+j;dj@$*3!$0_"'"
+
+** b
+
+fa;d
+
+d;fl
+** c
+sadlfa
+
+;fs
+asd
+** d
+asdlfksad;f
+    `,
+}
+
 const engine = createEngine()
-const model = getTestModel()
+const model = new DiagramModel() // getTestModel()
 engine.setModel(model)
+// @ts-ignore
+window.E = engine
+// @ts-ignore
+window.r = (...args) => engine.repaintCanvas(...args)
+// @ts-ignore
+window.M = model
+// @ts-ignore
+window.D = new DagreEngine({
+  graph: {
+    rankdir: 'LR',
+    ranker: 'tight-tree',
+    marginx: 25,
+    marginy: 25
+  },
+  includeLinks: true
+})
+setTimeout(() => createGraph(mockFile, engine, model))
 
 export default function App () {
   return (
@@ -67,10 +107,10 @@ export default function App () {
                   Remove edge
               </button>
               <input type="file" onChange={async (e) => {
-                  const files = e.target.files || []
-                  if (files.length > 0) {
-                    createGraph(files[0], engine, model)
-                  }
+                const files = e.target.files || []
+                if (files.length > 0) {
+                  createGraph(files[0], engine, model)
+                }
               }} />
           </div>
           <div className="row">

@@ -2,6 +2,8 @@ import {
   DefaultNodeModel,
   LinkModel,
   NodeModel,
+  PointModel,
+  DefaultLinkModel,
   DiagramModel,
   DiagramEngine,
   DagreEngine
@@ -10,8 +12,8 @@ import { Editor } from './components/Editor'
 
 const dagreEngine = new DagreEngine({
   graph: {
-    rankdir: 'RL',
-    ranker: 'longest-path',
+    rankdir: 'LR',
+    ranker: 'tight-tree',
     marginx: 25,
     marginy: 25
   },
@@ -52,6 +54,25 @@ function getPattern (language) {
   return patterns[language].source
 }
 
+function createLink (source, target) {
+  const outPort = source.getPorts().Out
+  const inPort = target.getPorts().In
+  const link = new DefaultLinkModel()
+  link.setSourcePort(outPort)
+  link.setTargetPort(inPort)
+  link.setPoints([
+    new PointModel({
+      link,
+      position: outPort?.getPosition()
+    }),
+    new PointModel({
+      link,
+      position: inPort?.getPosition()
+    })
+  ])
+  return link
+}
+
 function parseText (text, language): string[] {
   // lookahead is used to keep the delimiter in the match after splitting
   const pattern = new RegExp(`(?=${getPattern(language)})`, 'gm')
@@ -77,7 +98,13 @@ export async function createGraph (file, engine: DiagramEngine, model: DiagramMo
     }
   })
 
-  model.addAll(...nodes)
+  const links: LinkModel[] = []
+  nodes.forEach((node, idx) => {
+    const nextNode = nodes[idx + 1]
+    if (nextNode) links.push(createLink(node, nextNode))
+  })
+
+  model.addAll(...nodes, ...links)
   await engine.repaintCanvas(true)
 
   nodesData.forEach(data => {
@@ -85,6 +112,8 @@ export async function createGraph (file, engine: DiagramEngine, model: DiagramMo
     if (nodeElement) processNode(nodeElement, data.content)
   })
 
-  dagreEngine.redistribute(model)
-  engine.zoomToFitNodes(50)
+  setTimeout(() => {
+    dagreEngine.redistribute(model)
+    engine.zoomToFitNodes()
+  })
 }
