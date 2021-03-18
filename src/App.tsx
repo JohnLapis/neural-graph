@@ -74,7 +74,7 @@ setTimeout(() => createGraph(mockFile, engine, model))
 
 export default function App () {
   return (
-      <div className="vw-100 vh-100 grid container">
+      <div className="vw-100 vh-100 mw-100 mh-100 grid container">
           <div className="row">
               <button onClick={async () => {
                 const newNode = new DefaultNodeModel({ name: 'OIOIO' })
