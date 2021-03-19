@@ -106,12 +106,13 @@ export default function App () {
               }}>
                   Remove edge
               </button>
-              <input type="file" onChange={async (e) => {
+              <input type="file" id="importFile" hidden onChange={e => {
                 const files = e.target.files || []
                 if (files.length > 0) {
                   createGraph(files[0], engine, model)
                 }
               }} />
+              <label className="btn btn-dark" htmlFor="importFile">Import file</label>
           </div>
           <div className="row">
               <GraphCanvas engine={engine} />
