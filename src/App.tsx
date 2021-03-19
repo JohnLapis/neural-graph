@@ -75,8 +75,8 @@ setTimeout(() => createGraph(mockFile, engine, model))
 export default function App () {
   return (
       <div className="vw-100 vh-100 mw-100 mh-100 grid container">
-          <div className="row">
-              <button onClick={async () => {
+          <div className="row mb-4" style={{height: "40px"}}>
+              <button className="btn btn-dark" onClick={async () => {
                 const newNode = new DefaultNodeModel({ name: 'OIOIO' })
                 newNode.addInPort('In')
                 newNode.addOutPort('Out')
@@ -88,7 +88,7 @@ export default function App () {
               }}>
                   Add node
               </button>
-              <button onClick={() => {
+              <button className="btn btn-dark" onClick={() => {
                 if (model.getSelectedEntities().length === 1) {
                   const entity = model.getSelectedEntities()[0]
                   if (entity instanceof NodeModel) model.removeNode(entity)
@@ -97,7 +97,7 @@ export default function App () {
               }}>
                   Remove node
               </button>
-              <button onClick={() => {
+              <button className="btn btn-dark" onClick={() => {
                 if (model.getSelectedEntities().length === 1) {
                   const entity = model.getSelectedEntities()[0]
                   if (entity instanceof LinkModel) model.removeLink(entity)
@@ -112,7 +112,7 @@ export default function App () {
                   createGraph(files[0], engine, model)
                 }
               }} />
-              <label className="btn btn-dark" htmlFor="importFile">Import file</label>
+              <label className="btn btn-dark" htmlFor="importFile"> Import file </label>
           </div>
           <div className="row">
               <GraphCanvas engine={engine} />
