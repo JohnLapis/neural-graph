@@ -25,12 +25,53 @@ const languages = {
 }
 
 const patterns = {
-  orgmode: /^\*{2} .*$/
+  orgmode: {
+    delimiter: /^\*{2} .*$/,
+    metadata: new RegExp([
+        /^#\+name: neural-graph metadata.*\n/,
+        /#\+begin_src.*\n/,
+        /((.|\n)*)\n/,
+        /#\+end_src$/,
+    ].map(r => r.source).join(''),
+    'mi')
+  }
 }
 
 interface NodeOptions {
     height?: number,
     width?: number,
+}
+
+function getLanguage (extension, defaultValue) {
+  return languages[extension] || defaultValue
+}
+
+function getPatterns (language) {
+  const pattern = patterns[language]
+  return {
+    delimiter: pattern.delimiter,
+    metadata: pattern.metadata
+  }
+}
+
+function addRegexFlags (regex, newFlags) {
+  const flags = Array.from(new Set(regex.flags + newFlags)).join('')
+  return new RegExp(regex.source, flags)
+}
+
+function parseText (text, language) {
+  // lookahead is used to keep the delimiter in the match after splitting
+  const patterns = getPatterns(language)
+  const metadata = text
+    .match(addRegexFlags(patterns.metadata, 'm'))?.[1] || ''
+  const textWithoutMetadata = text.replace(metadata, '')
+  const delimPattern = addRegexFlags(patterns.delimiter, 'gm')
+  const textChunks = textWithoutMetadata
+    .trim()
+    // delimiter remains in matches
+    .split(new RegExp(`(?=${delimPattern})`))
+    .filter(Boolean)
+  return { textChunks, metadata }
 }
 
 export function processNode (node: Element, content: string = '', options: NodeOptions = { height: 200, width: 150 }) {
@@ -44,14 +85,6 @@ export function processNode (node: Element, content: string = '', options: NodeO
         </Editor>,
         nodeTopDiv
   )
-}
-
-function getLanguage (extension, defaultValue) {
-  return languages[extension] || defaultValue
-}
-
-function getPattern (language) {
-  return patterns[language].source
 }
 
 function createLink (source, target) {
@@ -73,21 +106,14 @@ function createLink (source, target) {
   return link
 }
 
-function parseText (text, language): string[] {
-  // lookahead is used to keep the delimiter in the match after splitting
-  const pattern = new RegExp(`(?=${getPattern(language)})`, 'gm')
-  const matches = text.split(pattern)
-  return matches.filter(Boolean)
-}
-
 export async function createGraph (file, engine: DiagramEngine, model: DiagramModel) {
   const extension = file.name.match(/\.(.+)$/)?.[1]
   const language = getLanguage(extension, 'orgmode')
   const text = await file.text()
-  const matches = parseText(text, language)
+  const { textChunks, metadata: graphMetadata } = parseText(text, language)
 
   const nodes: NodeModel[] = []
-  const nodesData = matches.map(content => {
+  const nodesData = textChunks.map(content => {
     const node = new DefaultNodeModel()
     node.addInPort('In')
     node.addOutPort('Out')
