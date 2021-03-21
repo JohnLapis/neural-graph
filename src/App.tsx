@@ -29,28 +29,6 @@ function getTestModel() {
   return model
 }
 
-const mockFile = {
-    name: 'name',
-    text: async () => `
-** a
-
-j;dj@$*3!$0_"'"
-
-** b
-
-fa;d
-
-d;fl
-** c
-sadlfa
-
-;fs
-asd
-** d
-asdlfksad;f
-    `,
-}
-
 const engine = createEngine()
 const model = new DiagramModel() // getTestModel()
 engine.setModel(model)
@@ -70,7 +48,6 @@ window.D = new DagreEngine({
   },
   includeLinks: true
 })
-setTimeout(() => createGraph(mockFile, engine, model))
 
 export default function App () {
   return (
