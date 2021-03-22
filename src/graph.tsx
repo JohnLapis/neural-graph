@@ -26,14 +26,22 @@ const languages = {
 
 const patterns = {
   orgmode: {
+    startContent: /^\*{2} .*$/,
     delimiter: /^\*{2} .*$/,
     metadata: new RegExp([
-        /^#\+name: neural-graph metadata.*\n/,
-        /#\+begin_src.*\n/,
-        /((.|\n)*)\n/,
-        /#\+end_src$/,
+      /^#\+name: neural-graph metadata.*\n/,
+      /#\+begin_src.*\n/,
+      /((.|\n)*)\n/,
+      /#\+end_src$/,
     ].map(r => r.source).join(''),
-    'mi')
+    'mi'),
+    metadataDelims: {
+      begin: [
+        '#+name: neural-graph metadata',
+        '#+begin_src YAML',
+      ].join("\n"),
+      end: '#+end_src',
+    }
   }
 }
 
@@ -50,13 +58,36 @@ function getPatterns (language) {
   const pattern = patterns[language]
   return {
     delimiter: pattern.delimiter,
-    metadata: pattern.metadata
+    startContent: pattern.startContent,
+    metadata: pattern.metadata,
+    metadataDelims: pattern.metadataDelims,
   }
 }
 
 function addRegexFlags (regex, newFlags) {
   const flags = Array.from(new Set(regex.flags + newFlags)).join('')
   return new RegExp(regex.source, flags)
+}
+
+
+function getMetadata(graph) {
+    const nodes = Object.entries(
+        graph.layers.find(l => l.type == "diagram-nodes")?.models || {}
+    )
+    const edges = Object.values(
+        graph.layers.find(l => l.type == "diagram-links")?.models || {}
+    )
+    return {
+        nodes: nodes.map(n => ({id: n[0], name: n[1].name})),
+        edges: edges.map(e => ({out: e.target, 'in': e.source})),
+        // This field can only be edited by the user
+        'no-edges': [],
+    }
+}
+
+function parseMetadata(metadata, language): string {
+    const {begin, end} = getPatterns(language).metadataDelims
+    return begin + JSON.stringify(metadata) + end // IMP
 }
 
 function parseText (text, language) {
