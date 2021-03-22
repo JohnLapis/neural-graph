@@ -1,6 +1,6 @@
 import { CanvasWidget, TransformLayerWidget, SmartLayerWidget } from '@projectstorm/react-canvas-core'
 import styled from '@emotion/styled'
-import { processNode } from '../utils'
+import { processNode } from '../graph'
 
 namespace S {
  export const Canvas = styled.div`

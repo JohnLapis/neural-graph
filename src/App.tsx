@@ -6,7 +6,7 @@ import createEngine, {
   DagreEngine
 } from '@projectstorm/react-diagrams'
 import { GraphCanvas } from './components/GraphCanvas'
-import { createGraph, processNode } from './utils'
+import { createGraph, processNode } from './graph'
 
 function getTestModel() {
   const node1 = new DefaultNodeModel({ name: 'Node 1', color: 'rgb(0,192,255)' })
