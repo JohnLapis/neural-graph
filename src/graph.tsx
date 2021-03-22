@@ -100,7 +100,7 @@ function parseText (text, language) {
   const textChunks = textWithoutMetadata
     .trim()
     // delimiter remains in matches
-    .split(new RegExp(`(?=${delimPattern})`))
+    .split(new RegExp(`(?=${delimPattern.source})`, delimPattern.flags))
     .filter(Boolean)
   return { textChunks, metadata }
 }
