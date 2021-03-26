@@ -69,6 +69,16 @@ function addRegexFlags (regex, newFlags) {
   return new RegExp(regex.source, flags)
 }
 
+function getContentLines(graph): string[] {
+    // assuming ids always increase with when nodes are created and aren't
+    // altered in a dumb and unpredictable way
+    const nodes = graph.getModel().getNodes().sort((a, b)=> a.getId() < b.getId())
+    return nodes
+        .map(node => document.querySelector(`.node[data-nodeid="${node.id}"`))
+        .map(el => el.firstElementChild.maisUmasParadas.innerText)
+        .join('\n')
+        .split('\n')
+}
 
 function getMetadata(graph) {
     const nodes = Object.entries(
@@ -85,9 +95,36 @@ function getMetadata(graph) {
     }
 }
 
-function parseMetadata(metadata, language): string {
+function convertMedatadaToFileFormat(metadata, language): string {
     const {begin, end} = getPatterns(language).metadataDelims
     return begin + JSON.stringify(metadata) + end // IMP
+}
+
+export function exportGraph(model){
+    // rename those guys
+    const graph = model.serialize()
+    const metadata: string = convertMedatadaToFileFormat(
+        getMetadata(graph), graph.language
+    )
+    let contentLines: string[] = getContentLines(graph)
+    let startContent = getPatterns(graph.language).startContent
+    const startContentLineNum = contentLines.findIndex(
+        line => line.match(startContent)
+    )
+    const metadataLineNum = contentLines
+      .slice(0, startContentLineNum) // Before start of content
+       // Returns index of first empty line or of line before before content
+      .findIndex(line => line.match(/^$/)) || startContentLineNum - 1
+    contentLines.splice(metadataLineNum, 0, metadata + '\n')
+    return contentLines.join('')
+}
+
+export function exportGraphToFile(file, ...args) {
+    file.write(exportGraph(...args))
+}
+
+function readMetadata (metadata) {
+  return JSON.parse(metadata)
 }
 
 function parseText (text, language) {
@@ -97,6 +134,9 @@ function parseText (text, language) {
     .match(addRegexFlags(patterns.metadata, 'm'))?.[1] || ''
   const textWithoutMetadata = text.replace(metadata, '')
   const delimPattern = addRegexFlags(patterns.delimiter, 'gm')
+    // @ts-ignore
+    window.ss = textWithoutMetadata
+    window.sp = delimPattern
   const textChunks = textWithoutMetadata
     .trim()
     // delimiter remains in matches
@@ -162,6 +202,9 @@ export async function createGraph (file, engine: DiagramEngine, model: DiagramMo
   })
 
   model.addAll(...nodes, ...links)
+  try {
+      model.deserializeModel(readMetadata(graphMetadata), engine)
+  } catch (err) {}
   await engine.repaintCanvas(true)
 
   nodesData.forEach(data => {

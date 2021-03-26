@@ -6,9 +6,9 @@ import createEngine, {
   DagreEngine
 } from '@projectstorm/react-diagrams'
 import { GraphCanvas } from './components/GraphCanvas'
-import { createGraph, processNode } from './graph'
+import { createGraph, exportGraph, exportGraphToFile, processNode } from './graph'
 
-function getTestModel() {
+function getTestModel () {
   const node1 = new DefaultNodeModel({ name: 'Node 1', color: 'rgb(0,192,255)' })
   node1.setPosition(100, 100)
   node1.addInPort('In')
@@ -90,6 +90,17 @@ export default function App () {
                 }
               }} />
               <label className="btn btn-dark" htmlFor="importFile"> Import file </label>
+              <button className="btn btn-dark" onClick={() => {
+                  // @ts-ignore
+                  window.graph = exportGraph(model)
+              }}>
+                  Save graph into obj
+              </button>
+              <button className="btn btn-dark" onClick={() => {
+                  exportGraphToFile(undefined, model)
+              }}>
+                  Export graph into file
+              </button>
           </div>
           <div className="row">
               <GraphCanvas engine={engine} />
